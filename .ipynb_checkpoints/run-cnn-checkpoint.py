@@ -21,6 +21,9 @@ project = client.get_project(project_id)
 # 3. Ambil anotasi dari proyek
 tasks = project.get_tasks()
 
+```
+Memuat file audio dari audio_path menggunakan librosa.load, dengan sampling rate (sr) yang dapat ditentukan pengguna. Selanjutnya, kode menghasilkan spektrogram Mel (mel_spect) menggunakan librosa.feature.melspectrogram, yang mengubah sinyal audio menjadi representasi frekuensi berbasis Mel dengan jumlah filter bank tertentu (n_mels). Setelah itu, spektrogram Mel yang masih dalam bentuk daya diubah ke skala desibel (mel_spect_db) menggunakan librosa.power_to_db, dengan referensi normalisasi berdasarkan nilai maksimum. Hasil akhirnya adalah spektrogram Mel dalam skala desibel, yang dapat digunakan untuk analisis lebih lanjut, seperti pemrosesan suara atau pembelajaran mesin.
+```
 # Function to extract mel-spectrograms
 def extract_mel_spectrogram(audio_path, sr=22050, n_mels=128):
     y, sr = librosa.load(audio_path, sr=sr)
@@ -28,6 +31,9 @@ def extract_mel_spectrogram(audio_path, sr=22050, n_mels=128):
     mel_spect_db = librosa.power_to_db(mel_spect, ref=np.max)
     return mel_spect_db
 
+```
+Analisis sinyal audio dengan menghasilkan spektrogram Mel dalam skala desibel. Proses dimulai dengan memuat file audio dari audio_path menggunakan librosa.load, di mana pengguna dapat menentukan sampling rate (sr). Kemudian, sinyal audio dikonversi menjadi spektrogram Mel (mel_spect) menggunakan librosa.feature.melspectrogram, yang merepresentasikan energi frekuensi dalam skala Mel dengan jumlah filter tertentu (n_mels). Setelah itu, librosa.power_to_db digunakan untuk mengubah nilai daya dalam spektrogram menjadi skala desibel (mel_spect_db), dengan normalisasi berdasarkan nilai maksimum. Hasil akhirnya adalah representasi visual dari konten frekuensi dalam sinyal audio, yang berguna untuk berbagai aplikasi seperti analisis suara, pengenalan pola, atau pembelajaran mesin.
+```
 # Prepare dataset
 audio_files = []
 labels = []
@@ -50,10 +56,14 @@ for task in tasks:
     audio_files.append(mel_spectrogram)
     labels.append(label)
 
+```
+Mengonversi label kategori menjadi nilai numerik agar dapat digunakan dalam pemrosesan data, seperti dalam model machine learning. Prosesnya dimulai dengan mengambil daftar unik dari label yang ada menggunakan `set(labels)`, lalu mengubahnya kembali menjadi daftar (`unique_labels`). Selanjutnya, kode membuat pemetaan dari setiap label unik ke indeks numerik dengan `enumerate()`, menghasilkan dictionary `label_to_index`. Terakhir, daftar `labels` asli dikonversi ke daftar angka (`numeric_labels`) dengan menggantikan setiap label dengan indeks yang sesuai dari dictionary. Hasil akhirnya adalah representasi numerik dari label, yang memudahkan analisis atau pelatihan model.
+```
 # Convert labels to numeric values
 unique_labels = list(set(labels))
 label_to_index = {label: i for i, label in enumerate(unique_labels)}
 numeric_labels = [label_to_index[label] for label in labels]
+
 
 # Convert to numpy arrays and one-hot encode labels
 X_data = np.array(audio_files)
